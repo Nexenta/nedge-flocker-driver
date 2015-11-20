@@ -8,7 +8,7 @@ ClusterHQ/Flocker provides an efficient and easy way to connect persistent store
 ##Installation
 Make sure that flocker node service has been installed
 (https://docs.clusterhq.com/en/1.2.0/install/install-node.html)
-python setup.py install
+/opt/flocker/bin/python2.7 setup.py install
 
 ##Testing
 Create a configuration file: /etc/flocker/nedge.yml.

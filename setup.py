@@ -11,7 +11,7 @@ with codecs.open('DESCRIPTION.rst', encoding='utf-8') as f:
 
 setup(
     name='nedge_flocker_plugin',
-    version='1.0',
+    version='1.1',
     description='NexentaEdge Backend Plugin for ClusterHQ/Flocker',
     long_description=long_description,
     author='Nabin Acharya',

@@ -4,8 +4,7 @@
 from flocker.node.agents.blockdevice import (
     VolumeException, AlreadyAttachedVolume,
     UnknownVolume, UnattachedVolume,
-    IBlockDeviceAPI, _blockdevicevolume_from_dataset_id,
-    _blockdevicevolume_from_blockdevice_id
+    IBlockDeviceAPI, BlockDeviceVolume
 )
 
 from eliot import Message, Logger
@@ -71,8 +70,9 @@ class NedgeBlockDeviceAPI(object):
         return self._chunk_sz
 
     def create_volume(self, dataset_id, size):
-        volume = _blockdevicevolume_from_dataset_id(size=size,
-                                                    dataset_id=dataset_id)
+        volume = BlockDeviceVolume(size=size, attached_to=None,
+                                 dataset_id=dataset_id,
+                                 blockdevice_id=u"nedge-{0}".format(dataset_id))
         obj_idx = len(self._objs_list)
         self._reqdata.clear();
         self._reqdata['number'] = obj_idx
