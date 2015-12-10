@@ -36,13 +36,13 @@ To run the tests, enter-
  working-directory/nedge-flocker-driver directory.)
 
 ##Usage
-Add the following section to the file '/etc/flocker/agent.yml':
-"dataset":
-    "backend": "nedge_flocker_plugin"
-    "cluster_id": "cltest"
-    "tenant_id": "test"
-    "bucket-id": "ccowbd"
-    "chunk_sz": 4096
+Add the following section to the file '/etc/flocker/agent.yml':<br>
+"dataset":<br>
+    "backend": "nedge_flocker_plugin"<br>
+    "cluster_id": "cltest"<br>
+    "tenant_id": "test"<br>
+    "bucket-id": "ccowbd"<br>
+    "chunk_sz": 4096<br>
 (This is an example. Use your own values)
 
 ##Note
