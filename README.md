@@ -29,20 +29,20 @@ nedge:
     "chunk_sz": 4096
 
 To run the tests, enter-
->trial tests.nedge_tests
-    or
->/opt/flocker/bin/trial tests.nedge_tests
+>trial tests.nedge_tests</br>
+    or</br>
+>/opt/flocker/bin/trial tests.nedge_tests</br>
 (trial is a python program that runs unit-tests. You must in
  working-directory/nedge-flocker-driver directory.)
 
 ##Usage
 Add the following section to the file '/etc/flocker/agent.yml':<br>
 "dataset":<br>
-    "backend": "nedge_flocker_plugin"<br>
-    "cluster_id": "cltest"<br>
-    "tenant_id": "test"<br>
-    "bucket-id": "ccowbd"<br>
-    "chunk_sz": 4096<br>
+    <p>"backend": "nedge_flocker_plugin"<br>
+    <p>"cluster_id": "cltest"<br>
+    <p>"tenant_id": "test"<br>
+    <p>"bucket-id": "ccowbd"<br>
+    <p>"chunk_sz": 4096<br>
 (This is an example. Use your own values)
 
 ##Note
