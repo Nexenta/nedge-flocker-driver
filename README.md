@@ -41,11 +41,11 @@ To run the tests, enter-
 <pre>
 Add the following section to the file '/etc/flocker/agent.yml':
 "dataset":
-    <p>"backend": "nedge_flocker_plugin"
-    <p>"cluster_id": "cltest"
-    <p>"tenant_id": "test"
-    <p>"bucket-id": "ccowbd"
-    <p>"chunk_sz": 4096
+    "backend": "nedge_flocker_plugin"
+    "cluster_id": "cltest"
+    "tenant_id": "test"
+    "bucket-id": "ccowbd"
+    "chunk_sz": 4096
 (This is an example. Use your own values)
 </pre>
 
