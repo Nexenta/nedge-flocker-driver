@@ -29,11 +29,11 @@ nedge:
     "chunk_sz": 4096
 
 To run the tests, enter-
-    trial tests.nedge_tests
+>trial tests.nedge_tests
     or
-    /opt/flocker/bin/trial tests.nedge_tests
+>/opt/flocker/bin/trial tests.nedge_tests
 (trial is a python program that runs unit-tests. You must in
- <prefix>/nedge-flocker-driver directory.)
+ working-directory/nedge-flocker-driver directory.)
 
 ##Usage
 Add the following section to the file '/etc/flocker/agent.yml':
