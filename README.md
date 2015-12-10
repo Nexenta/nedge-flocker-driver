@@ -20,6 +20,7 @@ Install NexentaEdge storage plugin with the following command:
 >/opt/flocker/bin/python2.7 setup.py install
 
 ##Testing
+<pre>
 Create a configuration file: /etc/flocker/nedge.yml.
 Example:
 nedge:
@@ -27,6 +28,7 @@ nedge:
     "tenant_id": "test"
     "bucket_id": "ccowbd"
     "chunk_sz": 4096
+</pre>
 
 To run the tests, enter-
 >trial tests.nedge_tests</br>
@@ -36,14 +38,16 @@ To run the tests, enter-
  working-directory/nedge-flocker-driver directory.)
 
 ##Usage
-Add the following section to the file '/etc/flocker/agent.yml':<br>
-"dataset":<br>
-    <p>"backend": "nedge_flocker_plugin"<br>
-    <p>"cluster_id": "cltest"<br>
-    <p>"tenant_id": "test"<br>
-    <p>"bucket-id": "ccowbd"<br>
-    <p>"chunk_sz": 4096<br>
+<pre>
+Add the following section to the file '/etc/flocker/agent.yml':
+"dataset":
+    <p>"backend": "nedge_flocker_plugin"
+    <p>"cluster_id": "cltest"
+    <p>"tenant_id": "test"
+    <p>"bucket-id": "ccowbd"
+    <p>"chunk_sz": 4096
 (This is an example. Use your own values)
+</pre>
 
 ##Note
 The cluster_id, tenant_id and bucket_id must exist, before running the test
