@@ -2,6 +2,8 @@ NexentaEdge Flocker Plugin
 ==========================
 The plugin for NexentaEdge Flocker integration.
 
+This has been tested with Flocker 1.7.2.
+
 ## Description
 ClusterHQ/Flocker provides an efficient and easy way to connect persistent
 store with Docker containers. Nexenta's Flocker volume plugin allows the
