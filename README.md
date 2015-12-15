@@ -1,9 +1,10 @@
+[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
+This driver has been tested with Flocker 1.7.2.
+
 NexentaEdge Flocker Plugin
 ==========================
 The plugin for NexentaEdge Flocker integration.
 
-[![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
-This has been tested with Flocker 1.7.2.
 
 ## Description
 ClusterHQ/Flocker provides an efficient and easy way to connect persistent
