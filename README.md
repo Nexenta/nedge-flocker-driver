@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
-This driver has been tested with Flocker 1.8.
+This driver has been tested with Flocker 1.8.0.
 
 NexentaEdge Flocker Plugin
 ==========================
