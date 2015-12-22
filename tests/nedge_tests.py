@@ -1,16 +1,14 @@
-#Copyright Nexenta Systems, Inc.
+# Copyright Nexenta Systems, Inc.
 
-import os
-import socket
-import functools
-
-from twisted.trial.unittest import SynchronousTestCase, SkipTest
-from flocker.node.agents.test.test_blockdevice import make_iblockdeviceapi_tests
+from flocker.node.agents.test.test_blockdevice import (
+    make_iblockdeviceapi_tests)
 from nedge_test_main import nedge_test
+
 
 def nedge_bdapi_test(test_case):
     nbdapi = nedge_test(test_case)
     return nbdapi
+
 
 class NedgeBlockDeviceAPIInterfaceTests(
     make_iblockdeviceapi_tests(

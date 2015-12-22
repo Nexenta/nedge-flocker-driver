@@ -3,7 +3,6 @@
 
 from setuptools import setup, find_packages
 import codecs
-from os import path
 
 # Get the long description from the relevant file
 with codecs.open('DESCRIPTION.rst', encoding='utf-8') as f:
@@ -20,19 +19,19 @@ setup(
 
     classifiers=[
 
-    'Development Status :: Beta',
+        'Development Status :: Beta',
 
-    'Intended Audience :: System Administrators',
-    'Intended Audience :: Developers',
-    'Topic :: Software Development :: Libraries :: Python Modules',
+        'Intended Audience :: System Administrators',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries :: Python Modules',
 
-    'License :: OSI Approved :: Apache Software License',
+        'License :: OSI Approved :: Apache Software License',
 
-    # Python versions supported 
-    'Programming Language :: Python :: 2.7',
+        # Python versions supported
+        'Programming Language :: Python :: 2.7',
     ],
 
     keywords='backend, plugin, flocker, docker, python',
     packages=find_packages(),
-    #packages=find_packages(exclude=['test*']),
+    # packages=find_packages(exclude=['test*']),
 )

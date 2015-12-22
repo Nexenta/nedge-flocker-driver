@@ -1,4 +1,4 @@
-#Copyright Nexenta Systems, Inc.
+# Copyright Nexenta Systems, Inc.
 
 """
 Main test driver for NexentaEdge.
@@ -10,6 +10,7 @@ import socket
 
 from twisted.trial.unittest import SkipTest
 from nedge_flocker_plugin.nedge_objstor import NedgeBlockDeviceAPI, NedgeConfig
+
 
 def read_nedge_config():
     config_file = os.getenv('NEDGE_FLOCKER_CONFIG_FILE',
@@ -25,9 +26,10 @@ def read_nedge_config():
                            nedge_bucket_id, nedge_chunk_sz)
     raise SkipTest('Could not open config file')
 
+
 def nedge_test(test_case):
     conf = read_nedge_config()
-    nbapi = NedgeBlockDeviceAPI(conf,
-                    compute_instance_id=unicode(socket.gethostname()),
-                    allocation_unit=4096)
+    nbapi = NedgeBlockDeviceAPI(
+        conf, compute_instance_id=unicode(socket.gethostname()),
+        allocation_unit=4096)
     return nbapi

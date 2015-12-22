@@ -1,8 +1,8 @@
 # Copyright Nexenta Systems, Inc.
-#Check LICENSE file
+# Check LICENSE file
 
 from flocker.node.agents.blockdevice import (
-    VolumeException, AlreadyAttachedVolume,
+    AlreadyAttachedVolume,
     UnknownVolume, UnattachedVolume,
     IBlockDeviceAPI, BlockDeviceVolume
 )
@@ -10,11 +10,11 @@ from flocker.node.agents.blockdevice import (
 from eliot import Message, Logger
 from twisted.python.filepath import FilePath
 from zope.interface import implementer
-import os
 import socket
 import requests
 
 _logger = Logger()
+
 
 class NedgeConfig(object):
     def __init__(self, cluster_id, tenant_id, bucket_id, chunk_sz):
@@ -22,8 +22,8 @@ class NedgeConfig(object):
         self._tenant_id = tenant_id
         self._bucket_id = bucket_id
         self._chunk_sz = chunk_sz
-	self.cdnbd_url = 'http://127.0.0.1:8080/nbd'
-	self.adttnbd_url = 'http://127.0.0.1:8080/nbd/register'
+        self.cdnbd_url = 'http://127.0.0.1:8080/nbd'
+        self.adttnbd_url = 'http://127.0.0.1:8080/nbd/register'
 
     def get_chunk_sz(self):
         return self._chunk_sz
@@ -41,6 +41,7 @@ class NedgeConfig(object):
         return self.get_clust_id_str() + '/' + \
                self.get_tenant_id_str() + '/' + \
                self.get_bucket_id_str() + '/' + str(idx)
+
 
 @implementer(IBlockDeviceAPI)
 class NedgeBlockDeviceAPI(object):
@@ -70,16 +71,18 @@ class NedgeBlockDeviceAPI(object):
         return self._chunk_sz
 
     def create_volume(self, dataset_id, size):
-        volume = BlockDeviceVolume(size=size, attached_to=None,
-                                 dataset_id=dataset_id,
-                                 blockdevice_id=u"nedge-{0}".format(dataset_id))
+        volume = BlockDeviceVolume(
+            size=size, attached_to=None,
+            dataset_id=dataset_id,
+            blockdevice_id=u"nedge-{0}".format(dataset_id))
         obj_idx = len(self._objs_list)
-        self._reqdata.clear();
+        self._reqdata.clear()
         self._reqdata['number'] = obj_idx
         self._reqdata['volSizeMB'] = size >> 20
         self._reqdata['blockSize'] = 512
         self._reqdata['chunkSize'] = self._chunk_sz
-        self._reqdata['objectPath'] = self._config.get_objpath_str(obj_idx)
+        self._reqdata['objectPath'] = self._config.get_objpath_str(
+            obj_idx)
 
         resp = requests.post(self._config.cdnbd_url, self._reqdata)
         if resp.status_code > 199 and resp.status_code < 300:
@@ -95,9 +98,10 @@ class NedgeBlockDeviceAPI(object):
             obj_idx = self._objs_list.values().index(volume)
             self._objs_list.pop(str(blockdevice_id), None)
 
-            self._reqdata.clear();
+            self._reqdata.clear()
             self._reqdata['number'] = obj_idx
-            self._reqdata['objectPath'] = self._config.get_objpath_str(obj_idx)
+            self._reqdata['objectPath'] = self._config.get_objpath_str(
+                obj_idx)
             resp = requests.delete(self._config.cdnbd_url, data=self._reqdata)
             if resp.status_code != requests.codes.ok:
                 Message.new(resp.text).write(_logger)
@@ -105,7 +109,7 @@ class NedgeBlockDeviceAPI(object):
             raise
 
     def destroy_volume_folder(self):
-        #Do nothing for now
+        # Do nothing for now
         return
 
     def attach_volume(self, blockdevice_id, attach_to):
@@ -113,9 +117,10 @@ class NedgeBlockDeviceAPI(object):
             volume = self._get_vol(blockdevice_id)
             if volume.attached_to is None:
                 obj_idx = self._objs_list.values().index(volume)
-                self._reqdata.clear();
+                self._reqdata.clear()
                 self._reqdata['number'] = obj_idx
-                self._reqdata['objectPath'] = self._config.get_objpath_str(obj_idx)
+                self._reqdata['objectPath'] = self._config.get_objpath_str(
+                    obj_idx)
 
                 resp = requests.post(self._config.adttnbd_url, self._reqdata)
                 if resp.status_code == 204:
@@ -130,7 +135,7 @@ class NedgeBlockDeviceAPI(object):
             raise
 
     def resize_volume(self, blockdevice_id, size):
-        #Do nothing for now
+        # Do nothing for now
         return
 
     def detach_volume(self, blockdevice_id):
@@ -138,16 +143,20 @@ class NedgeBlockDeviceAPI(object):
             volume = self._get_vol(blockdevice_id)
             if volume.attached_to is not None:
                 obj_idx = self._objs_list.values().index(volume)
-                self._reqdata.clear();
+                self._reqdata.clear()
                 self._reqdata['number'] = obj_idx
-                self._reqdata['objectPath'] = self._config.get_objpath_str(obj_idx)
+                self._reqdata['objectPath'] = self._config.get_objpath_str(
+                    obj_idx)
 
-                resp = requests.delete(self._config.adttnbd_url, data=self._reqdata)
+                resp = requests.delete(
+                    self._config.adttnbd_url, data=self._reqdata)
                 if resp.status_code == requests.codes.ok:
                     dtt_vol = volume.set(attached_to=None)
                     self._objs_list[str(blockdevice_id)] = dtt_vol
             else:
-                Message.new(Info='Volume' + blockdevice_id + 'not attached').write(_logger)
+                Message.new(
+                    Info='Volume' + blockdevice_id +
+                    'not attached').write(_logger)
                 raise UnattachedVolume(blockdevice_id)
         except:
             raise
@@ -159,15 +168,18 @@ class NedgeBlockDeviceAPI(object):
         try:
             volume = self._get_vol(blockdevice_id)
             if volume.attached_to is not None:
-                return FilePath('/dev/nbd' + \
+                return FilePath('/dev/nbd' +
                                 str(self._objs_list.values().index(volume)))
             else:
-                Message.new(Info='Volume' + blockdevice_id + 'not attached').write(_logger)
+                Message.new(
+                    Info='Volume' + blockdevice_id +
+                    'not attached').write(_logger)
                 raise UnattachedVolume(blockdevice_id)
         except:
             raise
 
+
 def get_nedge_block_api(conf):
-    return NedgeBlockDeviceAPI(conf,
-                compute_instance_id=unicode(socket.gethostname()),
-                allocation_unit=conf.get_chunk_sz())
+    return NedgeBlockDeviceAPI(
+        conf, compute_instance_id=unicode(socket.gethostname()),
+        allocation_unit=conf.get_chunk_sz())
