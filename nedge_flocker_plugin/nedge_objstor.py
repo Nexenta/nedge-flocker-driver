@@ -17,13 +17,13 @@ _logger = Logger()
 
 
 class NedgeConfig(object):
-    def __init__(self, cluster_id, tenant_id, bucket_id, chunk_sz):
+    def __init__(self, nedge_mgt_address, cluster_id, tenant_id, bucket_id, chunk_sz):
         self._cluster_id = cluster_id
         self._tenant_id = tenant_id
         self._bucket_id = bucket_id
         self._chunk_sz = chunk_sz
-        self.cdnbd_url = 'http://127.0.0.1:8080/nbd'
-        self.adttnbd_url = 'http://127.0.0.1:8080/nbd/register'
+        self.cdnbd_url = 'http://{}:8080/nbd'.format(nedge_mgt_address)
+        self.adttnbd_url = self.cdnbd_url + '/register'
 
     def get_chunk_sz(self):
         return self._chunk_sz
@@ -38,9 +38,7 @@ class NedgeConfig(object):
         return str(self._bucket_id)
 
     def get_objpath_str(self, idx):
-        return self.get_clust_id_str() + '/' + \
-               self.get_tenant_id_str() + '/' + \
-               self.get_bucket_id_str() + '/' + str(idx)
+        return '/'.join((self.get_clust_id_str(), self.get_tenant_id_str(), self.get_bucket_id_str(), str(idx)))
 
 
 @implementer(IBlockDeviceAPI)

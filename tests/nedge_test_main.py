@@ -22,7 +22,7 @@ def read_nedge_config():
         nedge_tenant_id = nedge_config['tenant_id']
         nedge_bucket_id = nedge_config['bucket_id']
         nedge_chunk_sz = nedge_config['chunk_sz']
-        return NedgeConfig(nedge_cluster_id, nedge_tenant_id,
+        return NedgeConfig('127.0.0.1', nedge_cluster_id, nedge_tenant_id,
                            nedge_bucket_id, nedge_chunk_sz)
     raise SkipTest('Could not open config file')
 

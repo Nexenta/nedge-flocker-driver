@@ -7,9 +7,10 @@ from nedge_flocker_plugin.nedge_objstor import (
 
 
 def api_factory(**kwargs):
-    conf = NedgeConfig(cluster_id=kwargs[u'cluster_id'],
+    conf = NedgeConfig(nedge_mgt_address=kwargs[u'nedge_mgt_address'],
+                       cluster_id=kwargs[u'cluster_id'],
                        tenant_id=kwargs[u'tenant_id'],
-                       bucket_id=kwargs[u'bucket-id'],
+                       bucket_id=kwargs[u'bucket_id'],
                        chunk_sz=kwargs[u'chunk_sz'])
     return get_nedge_block_api(conf)
 
