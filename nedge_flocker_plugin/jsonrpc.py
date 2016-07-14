@@ -1,0 +1,95 @@
+# Copyright 2015 Nexenta Systems, Inc.
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+import base64
+import json
+import requests
+from eliot import Message, start_action
+
+
+class NexentaEdgeJSONProxy(object):
+
+    retry_exc_tuple = (
+        requests.exceptions.ConnectionError,
+        requests.exceptions.ConnectTimeout
+    )
+
+    def __init__(self, protocol, host, port, path, user, password, auto=False,
+                 method=None):
+        self.protocol = protocol.lower()
+        self.host = host
+        self.port = port
+        self.path = path
+        self.user = user
+        self.password = password
+        self.auto = auto
+        self.method = method
+
+    @property
+    def url(self):
+        return '%s://%s:%s/%s' % (self.protocol,
+                                  self.host, self.port, self.path)
+
+    def __getattr__(self, name):
+        if not self.method:
+            method = name
+        else:
+            raise Exception("Wrong resource call syntax")
+        return NexentaEdgeJSONProxy(
+            self.protocol, self.host, self.port, self.path,
+            self.user, self.password, self.auto, method)
+
+    def __hash__(self):
+        return self.url.__hash__()
+
+    def __repr__(self):
+        return 'HTTP JSON proxy: %s' % self.url
+
+    def __call__(self, *args):
+        with start_action(action_type='send_request'):
+            self.path = args[0]
+            data = None
+            if len(args) > 1:
+                data = json.dumps(args[1])
+
+            auth = base64.b64encode(
+                ('%s:%s' % (self.user, self.password)).encode('utf-8'))
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic %s' % auth
+            }
+
+            Message.log(action='Sending JSON data',
+                        method=self.method, url=self.url, data=data)
+
+            if self.method == 'get':
+                req = requests.get(self.url, headers=headers)
+            elif self.method == 'post':
+                req = requests.post(self.url, data=data, headers=headers)
+            elif self.method == 'put':
+                req = requests.put(self.url, data=data, headers=headers)
+            elif self.method == 'delete':
+                req = requests.delete(self.url, data=data, headers=headers)
+            else:
+                raise Exception(
+                    message='Unsupported method: %s' % self.method)
+
+            rsp = req.json()
+            req.close()
+
+            Message.log(action='Got response', response=rsp)
+            if rsp.get('response') is None:
+                raise Exception(data='Error response: %s' % rsp)
+            return rsp.get('response')
