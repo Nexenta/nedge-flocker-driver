@@ -125,6 +125,11 @@ class NedgeBlockDeviceAPI(object):
             'admin', 'nexenta')
         self.bucket_path = '/'.join((self._config._cluster_id, self._config._tenant_id, self._config._bucket_id))
         self.store = VolumeDataStore()
+        self.volumes = {}
+
+    def _get_servers(self):
+        res = self.restapi.get('system/stats')
+        return res['stats']['servers']
 
     def _get_host_info(self, host):
         res = self.restapi.get('system/stats')
@@ -249,15 +254,22 @@ class NedgeBlockDeviceAPI(object):
 
 
     def list_volumes(self):
+        resp = requests.get('/v1/state/datasets')
+        if resp.status_code == requests.codes.ok:
         volumes = []
-        for vol_info in self._get_nbd_devices(self._node_id):
-            blockdevice_id = vol_info["objectPath"].split('/')[-1]
-            if blockdevice_id in self.store:
-                volume = BlockDeviceVolume(
-                    size=vol_info["volSize"], attached_to=self.store[blockdevice_id],
-                    dataset_id=UUID(blockdevice_id[len(VOLUME_PREFIX):]),
-                    blockdevice_id=blockdevice_id.decode('utf8'))
-                volumes.append(volume)
+        servers = self._get_servers()
+        for sid in servers:
+            addr = servers[sid]['ipv6addr']
+            rsp = self.restapi.get('sysconfig/nbd/devices?remote=' + addr)
+            json.loads(rsp['value'])
+            for vol_info in json.loads(rsp['value']):
+                blockdevice_id = vol_info["objectPath"].split('/')[-1]
+                if blockdevice_id in self.store:
+                    volume = BlockDeviceVolume(
+                        size=vol_info["volSize"], attached_to=self.store[blockdevice_id],
+                        dataset_id=UUID(blockdevice_id[len(VOLUME_PREFIX):]),
+                        blockdevice_id=blockdevice_id.decode('utf8'))
+                    volumes.append(volume)
         return volumes
 
     def get_device_path(self, blockdevice_id):
